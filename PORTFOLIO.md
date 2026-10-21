@@ -5,7 +5,7 @@
 **Author:** Fofo Collin Moleme ([@Collin440](https://github.com/Collin440))
 **Status:** Pre-alpha, project created and running
 **Started:** October 2026
-**Repo:** `https://github.com/Collin440/<repo-name>`
+**Repo:** `https://github.com/Collin440/tsebo`
 
 ---
 
