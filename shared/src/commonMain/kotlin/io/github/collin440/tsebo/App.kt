@@ -23,6 +23,11 @@ import tsebo.shared.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
+        var showSplash by remember { mutableStateOf(true) }
+        if (showSplash) {
+            SplashScreen(onFinished = { showSplash = false })
+            return@MaterialTheme
+        }
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
