@@ -70,6 +70,7 @@ Detailed decisions live in [`docs/decisions/`](docs/decisions/).
 |---|---|
 | 2026-10-21 | Defined scope, wrote README, PORTFOLIO and CONTRIBUTING; chose the name TSEBO |
 | 2026-10-21 | Installed Android Studio, created the Kotlin Multiplatform project (Android + Desktop), first sample app running on the emulator |
+| 2026-10-22 | Fixed Android Studio JDK/SDK settings; added animated TSEBO splash screen |
 
 ## 9. Screenshots and demo
 
