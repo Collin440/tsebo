@@ -74,7 +74,8 @@ Detailed decisions live in [`docs/decisions/`](docs/decisions/).
 
 ## 9. Screenshots and demo
 
-*(Add screenshots, a short screen recording and a link to the Play Store test track here.)*
+<img width="525" height="1057" alt="image" src="https://github.com/user-attachments/assets/f3421ca5-581f-40d7-9b2f-83514a5c2680" />
+
 
 ## 10. Results and metrics
 
