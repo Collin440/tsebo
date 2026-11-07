@@ -25,6 +25,7 @@ private sealed interface Screen {
 fun App() {
     MaterialTheme {
         var screen by remember { mutableStateOf<Screen>(Screen.Splash) }
+        var lastOpened by remember { mutableStateOf<ContentsEntry?>(null) }
 
         AnimatedContent(
             targetState = screen,
@@ -45,7 +46,13 @@ fun App() {
         ) { current ->
             when (current) {
                 Screen.Splash -> SplashScreen(onFinished = { screen = Screen.Contents })
-                Screen.Contents -> ContentsScreen(onOpen = { screen = Screen.Section(it) })
+                Screen.Contents -> ContentsScreen(
+                    lastOpened = lastOpened,
+                    onOpen = { entry ->
+                        lastOpened = entry
+                        screen = Screen.Section(entry)
+                    },
+                )
                 is Screen.Section -> SectionPlaceholder(current.entry, onBack = { screen = Screen.Contents })
             }
         }

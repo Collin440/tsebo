@@ -35,6 +35,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.pointer.pointerInput
 
 private val CBackground = Color(0xFF0D1117)
 private val CText = Color(0xFFE6EDF3)
@@ -64,7 +68,8 @@ private val entries = listOf(
 )
 
 @Composable
-fun ContentsScreen(onOpen: (ContentsEntry) -> Unit) {
+fun ContentsScreen(lastOpened: ContentsEntry?, onOpen: (ContentsEntry) -> Unit) {
+    var showVersion by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,9 +78,36 @@ fun ContentsScreen(onOpen: (ContentsEntry) -> Unit) {
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 16.dp),
     ) {
-        Text("TSEBO(1)", color = CText, fontSize = 22.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+        Text(
+            "TSEBO(1)",
+            color = CText,
+            fontSize = 22.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(onLongPress = { showVersion = !showVersion })
+            },
+        )
+        if (showVersion) {
+            Text(
+                "v0.1.0 pre-alpha | built with Kotlin Multiplatform",
+                color = CTeal,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace,
+            )
+        }
         Text("research. discover. engineer.", color = CMuted, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
         Text("Today's edition", color = CTeal, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+        if (lastOpened != null) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "> resume: ${lastOpened.number} ${lastOpened.title}",
+                color = CPurple,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable { onOpen(lastOpened) },
+            )
+        }
         Spacer(Modifier.height(24.dp))
         entries.forEachIndexed { index, entry ->
             ContentsRow(entry = entry, index = index, onClick = { onOpen(entry) })
