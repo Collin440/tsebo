@@ -40,11 +40,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.pointer.pointerInput
 
-private val CBackground = Color(0xFF0D1117)
-private val CText = Color(0xFFE6EDF3)
-private val CMuted = Color(0xFF8B949E)
-private val CPurple = Color(0xFF7F52FF)
-private val CTeal = Color(0xFF14B8A6)
+private val CBackground = TseboColors.Background
+private val CText = TseboColors.Text
+private val CMuted = TseboColors.Muted
+private val CPurple = TseboColors.Purple
+private val CTeal = TseboColors.Teal
 
 data class ContentsEntry(
     val id: String,
@@ -90,7 +90,7 @@ fun ContentsScreen(lastOpened: ContentsEntry?, onOpen: (ContentsEntry) -> Unit) 
         )
         if (showVersion) {
             Text(
-                "v0.1.0 pre-alpha | built with Kotlin Multiplatform",
+                "v0.1.0 pre-alpha | built with KMP",
                 color = CTeal,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,

@@ -8,7 +8,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +22,7 @@ private sealed interface Screen {
 
 @Composable
 fun App() {
-    MaterialTheme {
+    TseboTheme {
         var screen by remember { mutableStateOf<Screen>(Screen.Splash) }
         var lastOpened by remember { mutableStateOf<ContentsEntry?>(null) }
 

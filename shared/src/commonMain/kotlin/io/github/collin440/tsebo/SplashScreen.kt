@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private val SplashBackground = Color(0xFF0D1117)
-private val Teal = Color(0xFF14B8A6)
-private val Muted = Color(0xFF9CA3AF)
+private val SplashBackground = TseboColors.Background
+private val Teal = TseboColors.Teal
+private val Muted = TseboColors.Muted
 
 @Composable
 fun SplashScreen(onFinished: () -> Unit) {

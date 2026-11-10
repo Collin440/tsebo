@@ -87,6 +87,7 @@ Estimated total: 16-18 weeks (a draft that I will revisit now that web is out of
 | 2026-10-22 | Fixed Android Studio JDK/SDK settings; added animated TSEBO splash screen |
 | 2026-10-23 | Revised the plan (v2): finite daily brief, lenses, Supabase-only backend, mobile first; updated the docs |
 | 2026-11-06 | Built the manual-style contents page (staggered reveal, dotted leaders, animated splash-to-contents transition), a "resume where you left off" bookmark and a long-press version easter egg |
+| 2026-11-08 | Moved all colours into one dark theme (`Theme.kt`) shared by the splash and contents screens |
 
 ## 9. Screenshots and demo
 
