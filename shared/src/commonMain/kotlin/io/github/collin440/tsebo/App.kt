@@ -29,16 +29,22 @@ fun App() {
         AnimatedContent(
             targetState = screen,
             transitionSpec = {
+                val ease = Motion.Smooth
                 when {
                     initialState is Screen.Splash ->
-                        (fadeIn(tween(600)) + slideInVertically(tween(600)) { it / 12 }) togetherWith
-                                fadeOut(tween(400))
+                        (fadeIn(tween(Motion.Slow, easing = ease)) +
+                                slideInVertically(tween(Motion.Slow, easing = ease)) { it / 14 }) togetherWith
+                                fadeOut(tween(Motion.Standard, easing = ease))
                     targetState is Screen.Section ->
-                        slideInHorizontally(tween(350)) { it } togetherWith
-                                slideOutHorizontally(tween(350)) { -it / 3 }
+                        (fadeIn(tween(Motion.Standard, easing = ease)) +
+                                slideInHorizontally(tween(Motion.Standard, easing = ease)) { it / 5 }) togetherWith
+                                (fadeOut(tween(Motion.Quick, easing = ease)) +
+                                        slideOutHorizontally(tween(Motion.Standard, easing = ease)) { -it / 8 })
                     else ->
-                        slideInHorizontally(tween(350)) { -it / 3 } togetherWith
-                                slideOutHorizontally(tween(350)) { it }
+                        (fadeIn(tween(Motion.Standard, easing = ease)) +
+                                slideInHorizontally(tween(Motion.Standard, easing = ease)) { -it / 8 }) togetherWith
+                                (fadeOut(tween(Motion.Quick, easing = ease)) +
+                                        slideOutHorizontally(tween(Motion.Standard, easing = ease)) { it / 5 })
                 }
             },
             label = "screens",

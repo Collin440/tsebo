@@ -1,10 +1,10 @@
 package io.github.collin440.tsebo
 
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
@@ -13,32 +13,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.animation.animateColorAsState
 
 private val CBackground = TseboColors.Background
 private val CText = TseboColors.Text
@@ -119,26 +114,26 @@ fun ContentsScreen(lastOpened: ContentsEntry?, onOpen: (ContentsEntry) -> Unit) 
 
 @Composable
 private fun ContentsRow(entry: ContentsEntry, index: Int, onClick: () -> Unit) {
-    val reveal = remember { Animatable(0f) }
-    LaunchedEffect(Unit) {
-        delay(index * 70L)
-        reveal.animateTo(1f, tween(350))
-    }
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
+    val titleColor by animateColorAsState(
+        targetValue = if (pressed) CPurple else CText,
+        animationSpec = tween(Motion.Quick),
+        label = "rowColor",
+    )
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .alpha(reveal.value)
-            .offset(x = ((1f - reveal.value) * 16f).dp)
+            .revealOnEnter(index)
+            .pressScale(interaction)
             .clickable(interactionSource = interaction, indication = null, onClick = onClick)
             .padding(start = (entry.indent * 20).dp, top = 10.dp, bottom = 10.dp),
         verticalAlignment = Alignment.Bottom,
     ) {
         Text(
             text = "${entry.number}  ${entry.title}",
-            color = if (pressed) CPurple else CText,
+            color = titleColor,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,
         )
