@@ -40,6 +40,7 @@ private val CText = TseboColors.Text
 private val CMuted = TseboColors.Muted
 private val CPurple = TseboColors.Purple
 private val CTeal = TseboColors.Teal
+private val CError = TseboColors.Error
 
 data class ContentsEntry(
     val id: String,
@@ -49,22 +50,38 @@ data class ContentsEntry(
     val indent: Int = 0,
 )
 
-// Placeholder numbers until Supabase supplies real ones.
-private val entries = listOf(
-    ContentsEntry("brief", "1", "The Brief", "8 waiting"),
-    ContentsEntry("hubs", "2", "Hubs", "4"),
-    ContentsEntry("hub-mobile-web", "2.1", "Mobile & Web", "12", indent = 1),
-    ContentsEntry("hub-cloud", "2.2", "Cloud & Infra", "9", indent = 1),
-    ContentsEntry("hub-ai", "2.3", "AI & ML", "9", indent = 1),
-    ContentsEntry("hub-africa", "2.4", "Africa Business Tech", "6", indent = 1),
-    ContentsEntry("build-logs", "3", "Build Logs", "open"),
-    ContentsEntry("events", "4", "Events", "near you"),
-    ContentsEntry("lens", "5", "Your lens", "Builder"),
-)
+private fun buildEntries(state: HubsState): List<ContentsEntry> {
+    val hubs = (state as? HubsState.Loaded)?.hubs.orEmpty()
+    val briefStatus = when (state) {
+        is HubsState.Loaded -> "${hubs.sumOf { it.itemCount }} items"
+        HubsState.Loading -> "loading"
+        is HubsState.Failed -> "offline"
+    }
+    val hubsStatus = when (state) {
+        is HubsState.Loaded -> "${hubs.size}"
+        HubsState.Loading -> "loading"
+        is HubsState.Failed -> "offline"
+    }
+    return buildList {
+        add(ContentsEntry("brief", "1", "The Brief", briefStatus))
+        add(ContentsEntry("hubs", "2", "Hubs", hubsStatus))
+        hubs.forEachIndexed { index, hub ->
+            add(ContentsEntry("hub-${hub.id}", "2.${index + 1}", hub.title, "${hub.itemCount}", indent = 1))
+        }
+        add(ContentsEntry("build-logs", "3", "Build Logs", "soon"))
+        add(ContentsEntry("events", "4", "Events", "soon"))
+        add(ContentsEntry("lens", "5", "Your lens", "soon"))
+    }
+}
 
 @Composable
-fun ContentsScreen(lastOpened: ContentsEntry?, onOpen: (ContentsEntry) -> Unit) {
-    var showVersion by remember { mutableStateOf(false) }
+fun ContentsScreen(
+    lastOpened: ContentsEntry?,
+    hubsState: HubsState,
+    onOpen: (ContentsEntry) -> Unit,
+    onRetry: () -> Unit,
+) {
+    val entries = remember(hubsState) { buildEntries(hubsState) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,15 +91,16 @@ fun ContentsScreen(lastOpened: ContentsEntry?, onOpen: (ContentsEntry) -> Unit) 
             .padding(horizontal = 24.dp, vertical = 16.dp),
     ) {
         Text(
-            "TSEBO(1)",
+            "TSEBO",
             color = CText,
             fontSize = 22.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.pointerInput(Unit) {
-                detectTapGestures(onLongPress = { showVersion = !showVersion })
+
             },
         )
+        val showVersion = false
         if (showVersion) {
             Text(
                 "v0.1.0 pre-alpha | built with KMP",
@@ -93,6 +111,22 @@ fun ContentsScreen(lastOpened: ContentsEntry?, onOpen: (ContentsEntry) -> Unit) 
         }
         Text("research. discover. engineer.", color = CMuted, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
         Text("Today's edition", color = CTeal, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+        if (hubsState is HubsState.Failed) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "! ${hubsState.reason}",
+                color = CError,
+                fontSize = 13.sp,
+                fontFamily = FontFamily.Monospace,
+            )
+            Text(
+                text = "> retry",
+                color = CPurple,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onRetry).padding(vertical = 6.dp),
+            )
+        }
         if (lastOpened != null) {
             Spacer(Modifier.height(8.dp))
             Text(

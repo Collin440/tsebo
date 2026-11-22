@@ -12,6 +12,7 @@ object TseboColors {
     val Muted = Color(0xFF8B949E)
     val Purple = Color(0xFF7F52FF)
     val Teal = Color(0xFF14B8A6)
+    val Error = Color(0xFFF85149)
 }
 
 private val TseboDarkColors = darkColorScheme(

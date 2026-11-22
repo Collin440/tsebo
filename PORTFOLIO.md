@@ -65,6 +65,7 @@ Detailed decisions live in [`docs/decisions/`](docs/decisions).
 | 009 | Manual-style contents page as a finite, animated navigation screen | Fits the anti-doomscroll thesis: the page has a bottom, and live status counts replace page numbers | Accepted |
 | 010 | One shared motion system: short ease-out fades and slides that animate only transparency, position and scale | Keeps motion consistent and cheap to render, and suits a calm dark interface | Accepted |
 | 012 | Hub counts come from a database view (hub_summaries) with security_invoker | One request instead of many, and the view still respects Row Level Security | Accepted |
+| 013 | Supabase URL and publishable key are injected at build time from local.properties | Keys stay out of the repo, and only the public key ever ships in the app | Accepted |
 
 ## 7. Milestones
 
@@ -92,6 +93,7 @@ Estimated total: 16-18 weeks (a draft that I will revisit now that web is out of
 | 2026-11-08 | Moved all colours into one dark theme (`Theme.kt`) shared by the splash and contents screens |
 | 2026-11-18 | Added a shared motion system (durations, easing, reveal and press effects) and animated the screen transitions |
 | 2026-11-20 | Added a hub_summaries view so the app gets each hub with its item count in one request |
+| 2026-11-20 | Connected the app to Supabase (supabase-kt, Ktor engines, keys read from local.properties) and replaced the placeholder hub lines with real data, including loading and error states |
 
 ## 9. Screenshots and demo
 
