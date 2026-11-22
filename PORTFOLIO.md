@@ -66,6 +66,8 @@ Detailed decisions live in [`docs/decisions/`](docs/decisions).
 | 010 | One shared motion system: short ease-out fades and slides that animate only transparency, position and scale | Keeps motion consistent and cheap to render, and suits a calm dark interface | Accepted |
 | 012 | Hub counts come from a database view (hub_summaries) with security_invoker | One request instead of many, and the view still respects Row Level Security | Accepted |
 | 013 | Supabase URL and publishable key are injected at build time from local.properties | Keys stay out of the repo, and only the public key ever ships in the app | Accepted |
+| 014 | Ktor CIO HTTP engine is declared in both androidMain and jvmMain | Ktor finds its engine on the classpath at runtime; with none, the Supabase client crashes at startup | Accepted |
+| 015 | Supabase client creation is wrapped in runCatching in App.kt | A setup failure shows the error state with retry instead of crashing the app | Accepted |
 
 ## 7. Milestones
 
@@ -94,6 +96,7 @@ Estimated total: 16-18 weeks (a draft that I will revisit now that web is out of
 | 2026-11-18 | Added a shared motion system (durations, easing, reveal and press effects) and animated the screen transitions |
 | 2026-11-20 | Added a hub_summaries view so the app gets each hub with its item count in one request |
 | 2026-11-20 | Connected the app to Supabase (supabase-kt, Ktor engines, keys read from local.properties) and replaced the placeholder hub lines with real data, including loading and error states |
+| 2026-11-22 | Fixed the Android crash on startup by adding the Ktor CIO engine to androidMain, and wrapped Supabase client creation in runCatching so setup errors show the error state instead of crashing; the contents page now shows the four real hubs from Supabase |
 
 ## 9. Screenshots and demo
 

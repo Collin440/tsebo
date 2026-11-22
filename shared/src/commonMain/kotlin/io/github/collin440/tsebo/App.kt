@@ -30,18 +30,26 @@ fun App(config: SupabaseConfig) {
         var hubsState by remember { mutableStateOf<HubsState>(HubsState.Loading) }
         var reloadCount by remember { mutableStateOf(0) }
 
-        val repository = remember(config) {
-            if (config.isConfigured) HubRepository(createTseboSupabaseClient(config)) else null
+        val repositoryResult = remember(config) {
+            if (config.isConfigured) {
+                runCatching { HubRepository(createTseboSupabaseClient(config)) }
+            } else {
+                null
+            }
         }
 
         // Starts immediately, so hubs load while the splash plays.
-        LaunchedEffect(repository, reloadCount) {
+        LaunchedEffect(repositoryResult, reloadCount) {
             hubsState = HubsState.Loading
-            hubsState = if (repository == null) {
-                HubsState.Failed("Supabase keys are missing. Add supabase.url and supabase.key to local.properties.")
-            } else {
-                try {
-                    HubsState.Loaded(repository.loadHubs())
+            hubsState = when {
+                repositoryResult == null ->
+                    HubsState.Failed("Supabase keys are missing. Add supabase.url and supabase.key to local.properties.")
+                repositoryResult.isFailure ->
+                    HubsState.Failed(
+                        repositoryResult.exceptionOrNull()?.message ?: "Could not start the Supabase client.",
+                    )
+                else -> try {
+                    HubsState.Loaded(repositoryResult.getOrThrow().loadHubs())
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
