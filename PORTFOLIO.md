@@ -68,6 +68,7 @@ Detailed decisions live in [`docs/decisions/`](docs/decisions).
 | 013 | Supabase URL and publishable key are injected at build time from local.properties | Keys stay out of the repo, and only the public key ever ships in the app | Accepted |
 | 014 | Ktor CIO HTTP engine is declared in both androidMain and jvmMain | Ktor finds its engine on the classpath at runtime; with none, the Supabase client crashes at startup | Accepted |
 | 015 | Supabase client creation is wrapped in runCatching in App.kt | A setup failure shows the error state with retry instead of crashing the app | Accepted |
+| 016 | Desktop reads supabase.url and supabase.key from local.properties at startup | BuildConfig only exists on Android, so desktop loads the same file and the same key names itself | Accepted |
 
 ## 7. Milestones
 
@@ -97,6 +98,7 @@ Estimated total: 16-18 weeks (a draft that I will revisit now that web is out of
 | 2026-11-20 | Added a hub_summaries view so the app gets each hub with its item count in one request |
 | 2026-11-20 | Connected the app to Supabase (supabase-kt, Ktor engines, keys read from local.properties) and replaced the placeholder hub lines with real data, including loading and error states |
 | 2026-11-22 | Fixed the Android crash on startup by adding the Ktor CIO engine to androidMain, and wrapped Supabase client creation in runCatching so setup errors show the error state instead of crashing; the contents page now shows the four real hubs from Supabase |
+| 2026-11-22 | Fixed desktopApp to build with App(config) by reading the Supabase keys from local.properties at startup; deleted the exposed secret key from Supabase |
 
 ## 9. Screenshots and demo
 
